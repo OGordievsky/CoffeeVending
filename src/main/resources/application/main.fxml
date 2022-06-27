@@ -29,9 +29,9 @@
             <Button fx:id="main_table_button_add" layoutX="595.0" layoutY="13.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="158.0" style="-fx-background-color: #98FB98; -fx-border-color: silver; -fx-cursor: hand;" text="добавить в корзину" />
             <TableView fx:id="main_table_basket" layoutX="35.0" layoutY="375.0" prefHeight="174.0" prefWidth="558.0">
                <columns>
-                  <TableColumn fx:id="main_table_basket_name" prefWidth="306.0" text="Наименование" />
-                  <TableColumn fx:id="main_table_basket_count" minWidth="0.0" prefWidth="82.0" text="Количество" />
-                  <TableColumn fx:id="main_table_basket_total" minWidth="0.0" prefWidth="169.0" text="Сумма" />
+                  <TableColumn fx:id="main_table_basket_name" prefWidth="188.0" text="Наименование" />
+                  <TableColumn fx:id="main_table_basket_count" minWidth="0.0" prefWidth="189.0" text="Количество" />
+                  <TableColumn fx:id="main_table_basket_total" minWidth="0.0" prefWidth="176.0" text="Сумма" />
                </columns>
             </TableView>
             <Button fx:id="main_basket_button_pay" layoutX="597.0" layoutY="522.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="158.0" style="-fx-background-color: #98FB98; -fx-border-color: silver; -fx-cursor: hand;" text="Оплатить" />
@@ -42,6 +42,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
+            <Button fx:id="main_basket_button_delete" layoutX="597.0" layoutY="409.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="158.0" style="-fx-background-color: #FFFF00; -fx-border-color: silver; -fx-cursor: hand;" text="удалить выбранное" />
          </children>
       </AnchorPane>
       <Label layoutX="351.0" layoutY="-5.0" prefHeight="38.0" prefWidth="169.0" text="Buy coffee" textAlignment="CENTER" textFill="WHITE">

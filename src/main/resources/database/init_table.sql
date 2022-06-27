@@ -30,7 +30,7 @@ CREATE TABLE checklines
 (
     line_id      INT8 PRIMARY KEY DEFAULT nextval('global_seq'),
     check_id     INT8                       NOT NULL,
-    goods_ean    INT                        NOT NULL,
+    goods_ean    INT8                       NOT NULL,
     count        INT                        NOT NULL,
     total        FLOAT                      NOT NULL,
     FOREIGN KEY (check_id) REFERENCES checks (check_id) ON DELETE CASCADE
