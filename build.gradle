@@ -12,5 +12,5 @@ dependencies {
 }
 
 application {
-    mainClassName = 'coffevending.App'
+    mainClassName = 'coffevending.Application'
 }
