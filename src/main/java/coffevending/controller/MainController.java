@@ -77,28 +77,35 @@ public class MainController extends AbstractController {
     @FXML
     private Button main_basket_button_delete;
 
-
     @FXML
     void initialize() {
         this.productList = goodsService.getAll();
         initTable(productList);
 
         main_filter_field.textProperty().addListener((observable, oldValue, newValue) -> {
-            initTable(goodsService.getFilter(productList, newValue));
+            if(productList != null && newValue != null){
+                initTable(goodsService.getFilter(productList, newValue));
+            }
         });
 
         main_filter_button_clear.setOnAction(event -> {
             main_filter_field.setText("");
         });
 
-        main_table_products.getSelectionModel().selectedItemProperty().addListener(
-                (observable, oldValue, newValue)->{
-                    addProductToBasket(newValue);
+        main_table_products.setOnMousePressed(event -> {
+            if (event.isPrimaryButtonDown() && event.getClickCount() == 1) {
+                Product product = main_table_products.getFocusModel().getFocusedItem();
+                if (product != null){
+                    addProductToBasket(product);
+                }
+            }
         });
 
         main_table_button_add.setOnAction(event -> {
             Product product = main_table_products.getFocusModel().getFocusedItem();
-            addProductToBasket(product);
+            if (product != null){
+                addProductToBasket(product);
+            }
         });
 
         main_basket_button_clear.setOnAction(event -> {
