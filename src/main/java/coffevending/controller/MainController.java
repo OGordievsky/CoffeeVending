@@ -107,30 +107,34 @@ public class MainController extends AbstractController {
 
         main_basket_button_delete.setOnAction(event -> {
             CheckLines product = main_table_basket.getFocusModel().getFocusedItem();
-            deletePositionBasket(product);
+            if (product != null){
+                deletePositionBasket(product);
+            }
         });
 
         main_basket_button_pay.setOnAction(event -> {
-            Stage newWindow = new Stage();
-            FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("/application/pay_page.fxml"));
-            Map<String, String> params = new HashMap<>();
-            params.put("totalSum", String.valueOf(getTotalBasketSum()));
-            fxmlLoader.getNamespace().putAll(params);
+            if(!basketList.isEmpty()){
+                Stage newWindow = new Stage();
+                FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("/application/pay_page.fxml"));
+                Map<String, String> params = new HashMap<>();
+                params.put("totalSum", String.valueOf(getTotalBasketSum()));
+                fxmlLoader.getNamespace().putAll(params);
 
-            Scene scene = null;
-            try {
-                scene = new Scene(fxmlLoader.load(), 210, 320);
-            } catch (IOException e) {
-                e.printStackTrace();
+                Scene scene = null;
+                try {
+                    scene = new Scene(fxmlLoader.load(), 210, 320);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                PayController lc = fxmlLoader.getController();
+                lc.mainController = this;
+                newWindow.setTitle("Pay");
+                newWindow.setScene(scene);
+                newWindow.setResizable(false);
+                newWindow.initModality(Modality.WINDOW_MODAL);
+                newWindow.initOwner(main_basket_button_pay.getScene().getWindow());
+                newWindow.show();
             }
-            PayController lc = fxmlLoader.getController();
-            lc.mainController = this;
-            newWindow.setTitle("Pay");
-            newWindow.setScene(scene);
-            newWindow.setResizable(false);
-            newWindow.initModality(Modality.WINDOW_MODAL);
-            newWindow.initOwner(main_basket_button_pay.getScene().getWindow());
-            newWindow.show();
         });
     }
 
@@ -163,8 +167,6 @@ public class MainController extends AbstractController {
         main_table_basket_name.setCellValueFactory(new PropertyValueFactory<>("name"));
         main_table_basket_count.setCellValueFactory(new PropertyValueFactory<>("count"));
         main_table_basket_total.setCellValueFactory(new PropertyValueFactory<>("total"));
-
-
         main_table_basket.setItems(basketData);
     }
 
@@ -177,6 +179,7 @@ public class MainController extends AbstractController {
     public void deletePositionBasket(CheckLines checkLines) {
         basketList.remove(checkLines.getName());
         initBasket(basketList);
+        main_basket_field_totalSum.setText(String.format("%1$,.2f", getTotalBasketSum()));
         main_table_basket.refresh();
     }
 
