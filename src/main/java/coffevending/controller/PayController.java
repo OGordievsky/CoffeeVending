@@ -1,17 +1,17 @@
 package coffevending.controller;
 
-import java.math.BigDecimal;
-import java.net.URL;
-import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
+import java.math.BigDecimal;
+import java.net.URL;
+import java.util.ResourceBundle;
+
 public class PayController {
 
-    public static final String PAGE_URL = "/application/pay_page.fxml";
     protected MainController mainController;
 
     @FXML
@@ -44,15 +44,13 @@ public class PayController {
                 try {
                     bigDecimal = new BigDecimal(inputString);
                 } catch (NumberFormatException e){
-                    pay_inputSum_field.setText(pay_totalSum_text.getText());
+                    pay_inputSum_field.setText(totalSum());
                 }
-
-                if(bigDecimal != null && bigDecimal.compareTo(mainController.getTotalBasketSum())==0) {
-                    mainController.saveBasket();
-                    mainController.clearBasket();
+                if(bigDecimal != null && bigDecimal.compareTo(mainController.getCartService().getTotalBasketSum())==0) {
+                    mainController.refreshBasket(mainController.getCartService().newCheck());
                     pay_button_confirm.getScene().getWindow().hide();
                 } else {
-                    pay_inputSum_field.setText(pay_totalSum_text.getText());
+                    pay_inputSum_field.setText(totalSum());
                 }
         });
 
@@ -61,4 +59,11 @@ public class PayController {
         });
     }
 
+    private String totalSum(){
+        return String.valueOf(mainController.getCartService().getTotalBasketSum().doubleValue());
+    }
+
+    public void setController(MainController mainController) {
+        this.mainController = mainController;
+    }
 }

@@ -7,13 +7,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class GoodsService {
+    private List<Product> productList;
     private final GoodsRepository goodsRepository = new GoodsRepository();
 
-    public List<Product> getAll() {
-        return goodsRepository.getAll();
+    public GoodsService(){
+        this.productList = goodsRepository.getAll();
     }
 
-    public List<Product> getFilter(List<Product> products, String filter) {
-        return products.stream().filter(product -> product.getName().toLowerCase().contains(filter.toLowerCase())).collect(Collectors.toList());
+    public List<Product> getAll() {
+        return this.productList;
+    }
+
+    public List<Product> getFilter(String filter) {
+        return productList.stream().filter(product -> product.getName().toLowerCase().contains(filter.toLowerCase())).collect(Collectors.toList());
     }
 }

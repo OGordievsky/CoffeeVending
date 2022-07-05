@@ -5,11 +5,11 @@ import coffevending.model.CheckLines;
 import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.List;
+import java.util.Collection;
 
 public class CartRepository extends AbstractRepository {
 
-    public boolean saveAll( List<CheckLines> listCheckLines, long check_id) {
+    public boolean saveAll(Collection<CheckLines> listCheckLines, long check_id) {
         int result = 0;
         for (CheckLines checkLine : listCheckLines ){
             String sql = "INSERT INTO checklines (check_id, goods_ean, count, total) " +

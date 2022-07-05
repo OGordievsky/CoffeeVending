@@ -3,6 +3,8 @@ package coffevending.controller;
 import coffevending.Application;
 import coffevending.model.CheckLines;
 import coffevending.model.Product;
+import coffevending.service.CartService;
+import coffevending.service.GoodsService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -17,14 +19,13 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.net.URL;
 import java.util.*;
 
-public class MainController extends AbstractController {
+public class MainController {
 
-    private List<Product> productList;
-    private final HashMap<String, CheckLines> basketList = new HashMap<>();
+    private GoodsService goodsService = new GoodsService();
+    private CartService cartService = new CartService();
 
     @FXML
     private ResourceBundle resources;
@@ -79,12 +80,11 @@ public class MainController extends AbstractController {
 
     @FXML
     void initialize() {
-        this.productList = goodsService.getAll();
-        initTable(productList);
+        refreshTable(goodsService.getAll());
 
         main_filter_field.textProperty().addListener((observable, oldValue, newValue) -> {
-            if(productList != null && newValue != null){
-                initTable(goodsService.getFilter(productList, newValue));
+            if(newValue != null){
+                refreshTable(goodsService.getFilter(newValue));
             }
         });
 
@@ -96,7 +96,7 @@ public class MainController extends AbstractController {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 1) {
                 Product product = main_table_products.getFocusModel().getFocusedItem();
                 if (product != null){
-                    addProductToBasket(product);
+                    refreshBasket(cartService.addProductToBasket(product));
                 }
             }
         });
@@ -104,27 +104,27 @@ public class MainController extends AbstractController {
         main_table_button_add.setOnAction(event -> {
             Product product = main_table_products.getFocusModel().getFocusedItem();
             if (product != null){
-                addProductToBasket(product);
+                refreshBasket(cartService.addProductToBasket(product));
             }
         });
 
         main_basket_button_clear.setOnAction(event -> {
-            clearBasket();
+             refreshBasket(cartService.clearBasket());
         });
 
         main_basket_button_delete.setOnAction(event -> {
             CheckLines product = main_table_basket.getFocusModel().getFocusedItem();
             if (product != null){
-                deletePositionBasket(product);
+                refreshBasket(cartService.deletePositionBasket(product));
             }
         });
 
         main_basket_button_pay.setOnAction(event -> {
-            if(!basketList.isEmpty()){
+            if(!cartService.basketIsEmpty()){
                 Stage newWindow = new Stage();
                 FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("/application/pay_page.fxml"));
                 Map<String, String> params = new HashMap<>();
-                params.put("totalSum", String.valueOf(getTotalBasketSum()));
+                params.put("totalSum", String.valueOf(cartService.getTotalBasketSum()));
                 fxmlLoader.getNamespace().putAll(params);
 
                 Scene scene = null;
@@ -145,21 +145,8 @@ public class MainController extends AbstractController {
         });
     }
 
-    private void addProductToBasket(Product product) {
-        CheckLines checkLine;
-        if (basketList.containsKey(product.getName())) {
-            checkLine = basketList.get(product.getName());
-            checkLine.addIncrease(product);
-        } else {
-            checkLine = new CheckLines(product);
-        }
-        basketList.put(product.getName(), checkLine);
-        initBasket(basketList);
-        main_basket_field_totalSum.setText(String.format("%1$,.2f", getTotalBasketSum()));
-        main_table_basket.refresh();
-    }
 
-    private void initTable(List<Product> productList) {
+    public void refreshTable(List<Product> productList) {
         ObservableList<Product> productsData = FXCollections.observableArrayList();
         productsData.addAll(productList);
         main_table_products_ean.setCellValueFactory(new PropertyValueFactory<>("ean"));
@@ -168,35 +155,22 @@ public class MainController extends AbstractController {
         main_table_products.setItems(productsData);
     }
 
-    private void initBasket(Map<String, CheckLines> basketList) {
+    public void refreshBasket(Map<String, CheckLines> basketList) {
         ObservableList<CheckLines> basketData = FXCollections.observableArrayList();
         basketData.addAll(new ArrayList<>(basketList.values()));
         main_table_basket_name.setCellValueFactory(new PropertyValueFactory<>("name"));
         main_table_basket_count.setCellValueFactory(new PropertyValueFactory<>("count"));
         main_table_basket_total.setCellValueFactory(new PropertyValueFactory<>("total"));
         main_table_basket.setItems(basketData);
-    }
-
-    public void clearBasket() {
-        main_basket_field_totalSum.setText("");
-        basketList.clear();
-        initBasket(basketList);
-        main_table_basket.refresh();
-    }
-    public void deletePositionBasket(CheckLines checkLines) {
-        basketList.remove(checkLines.getName());
-        initBasket(basketList);
-        main_basket_field_totalSum.setText(String.format("%1$,.2f", getTotalBasketSum()));
+        main_basket_field_totalSum.setText(String.format("%1$,.2f", cartService.getTotalBasketSum()));
         main_table_basket.refresh();
     }
 
-    public BigDecimal getTotalBasketSum() {
-        return this.basketList.values().stream()
-                .map(checkLines -> checkLines.getTotal())
-                .reduce((bD1, bD2) -> bD1.add(bD2)).orElse(new BigDecimal("0.0"));
+    public GoodsService getGoodsService() {
+        return this.goodsService;
     }
 
-    public void saveBasket() {
-        cartService.newCheck(new ArrayList<>(basketList.values()), getTotalBasketSum());
+    public CartService getCartService() {
+        return this.cartService;
     }
 }
