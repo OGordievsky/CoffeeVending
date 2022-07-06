@@ -39,7 +39,7 @@
 <br/>1. Open you favorite IDE
 <br/>2. Walk into yours "projects" directory
 <br/>3. Ensure that your PC have <a href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">Git</a>
-<br/>3. In project directory type next console command: <b>git clone https://github.com/OGordievsky/ShowFormattedText</b>
+<br/>3. In project directory type next console command: <b>git clone https://github.com/OGordievsky/CoffeeVending</b>
 <br/>3. In yours IDE make next steps: File -> Open -> \projects\CoffeeVending -> Open as Java8-project
 <br/>4. Find main class "Application" in: \CoffeeVending\src\coffevending\Application.java
 <br/>5. Right click on Application.java select [Run] (green "Play" triangle)
