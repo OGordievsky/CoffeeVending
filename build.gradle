@@ -14,3 +14,13 @@ dependencies {
 application {
     mainClassName = 'coffevending.Application'
 }
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.example.service.Main'
+    }
+
+    from {
+        configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}

@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public class DBConnection {
-    private final String DB_PROPERTIES = "src/main/resources/database/db.properties";
+    private final String DB_PROPERTIES = "database/db.properties";
 
     public Connection getDbConnection() throws SQLException, IOException {
         Properties property = new Properties();
